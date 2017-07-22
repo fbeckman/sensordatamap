@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Temperature/Humidity measurement</title>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=myAPIKEY"></script>
+	<script src="http://dweet.io/client/dweet.io.min.js"></script>
+    <script>
+		function initialize() {
+			var stuttgart = { lat: 48.775351, lng: 9.178089 }; //48.775351, 9.178089 Stuttgart
+			var loc1 = { lat: 48.7, lng: 9.1 }; 
+			var loc2 = { lat: 48.8, lng: 9.1 }; 
+			var map = new google.maps.Map(document.getElementById('map'), {
+				zoom: 13,
+				center: stuttgart
+			});
+			dweetio.get_latest_dweet_for("thingname1", function(err, dweet){
+			var dweet = dweet[0]; // Dweet is always an array of 1
+			// Add a marker at the center of the map.
+			addMarker(loc1, map, dweet.content.temperature, dweet.content.humidity);
+			});
+			
+			dweetio.get_latest_dweet_for("thingname2", function(err, dweet){
+			var dweet = dweet[0]; // Dweet is always an array of 1
+			// Add a marker at the center of the map.
+			addMarker(loc2, map, dweet.content.temperature, dweet.content.humidity);
+			});
+		}
+
+      // Adds a marker to the map.
+      function addMarker(location, map, temp, humidity) {
+        // Add the marker at the clicked location, and add the next-available label
+        // from the array of alphabetical characters.
+        var marker = new google.maps.Marker({
+          position: location,
+          label: temp.toString() + " C / " + humidity.toString() + "%" ,
+          map: map
+        });
+      }
+	  google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+    <div id="map"></div>
+  </body>
+</html>
