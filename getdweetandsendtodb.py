@@ -1,9 +1,13 @@
 import json, requests
 from time import sleep
 import csv
+from subprocess import call
+import sys
 
-getdata_url = "https://dweet.io/get/latest/dweet/for/1907ac6b-6a37-40b3-afa8-e6bcf12348c0"
-influxdb_url = "http://localhost:8086/write?db=ETAS' --databinary @c:/temp/data.txt"
+sensorGUID = sys.argv[1]
+getdata_url = "https://dweet.io/get/latest/dweet/for/" + sensorGUID
+
+warehouseID = sys.argv[2]
     
 while True:
     
@@ -14,11 +18,12 @@ while True:
     temperature = data['with'][0]['content']['temperature']
     humidity = data['with'][0]['content']['humidity']
 
-    f = open('c:/temp/data.txt', 'w')
-    f.write('sensor,WH=Vaihingen,Sensor1=' + thing + ' c=' + str(temperature) + '\n')
-    f.write('sensor,WH=Vaihingen,Sensor1=' + thing + ' h=' + str(humidity))
+    f = open('data.txt', 'w')
+    f.write('sensor,WH=' + warehouseID + ',Sensor1=1 c=' + str(temperature) + '\n')
+    f.write('sensor,WH=' + warehouseID + ',Sensor1=1 h=' + str(humidity))
     f.close()
 
-    r = requests.post(influxdb_url)
-   
+    call(["curl", "-XPOST", "http://localhost:8086/write?db=ETAS", "--data-binary", "@data.txt"])    
+  
     sleep(10)
+
