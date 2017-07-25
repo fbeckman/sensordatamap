@@ -5,6 +5,7 @@
 // WiFi parameters
 const char* ssid = "SSID";
 const char* password = "password";
+const char* thingname1 = "thingname1"
 
 // Pin
 #define DHTPIN 4
@@ -67,7 +68,7 @@ void loop() {
     Serial.println("Failed to read from DHT sensor!");
   } else {
     // This will send the request to the server
-    client.print(String("GET /dweet/for/thingname1?temperature=") + String(t) + "&humidity=" + String(h) + " HTTP/1.1\r\n" +
+    client.print(String("GET /dweet/for/" + thingname1?temperature=") + String(t) + "&humidity=" + String(h) + " HTTP/1.1\r\n" +
                  "Host: " + host + "\r\n" + 
                  "Connection: close\r\n\r\n");
     delay(10);
